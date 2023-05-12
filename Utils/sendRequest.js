@@ -12,8 +12,35 @@ const sendRequest = async (vendor, url, method, data, header, token) => {
             'Authorization': 'Bearer ' + process.env.SUDO_KEY
         }
     } else if (vendor == "safehaven") {
+        // Refresh SafeHaven Access Token to avoid "expired token" error
+        const auth = await axios({
+            method: 'POST',
+            url: process.env.SAFEHAVEN_BASEURL+"/oauth2/token",
+            headers: { },
+            data: {
+                'grant_type': 'client_credentials',
+                'client_id': process.env.SAFEHAVEN_oAuth2ClientID,
+                'client_assertion_type': 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
+                'client_assertion': process.env.SAFEHAVEN_oAuth2ClientAssertion
+            }
+        })
+        .then(response => {
+            // console.log(`statusCode: ${response.status}`)
+            // console.log(response.data)
+            return response.data;
+        })
+        .catch(error => {
+            console.error(error)
+            res.status(403).send({
+                error
+            });
+        });
         var base_uri = process.env.SAFEHAVEN_BASEURL;
-        var headers = header
+        var headers = {
+            'Content-Type': 'application/json', 
+            'Authorization': 'Bearer '+auth.access_token, 
+            'ClientID': auth.ibs_client_id
+        }
     }
 
     const request = await axios({
