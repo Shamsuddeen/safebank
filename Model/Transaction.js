@@ -9,7 +9,7 @@ const transationSchema = new mongoose.Schema({
     type: String,
     accountId: {
         type: mongoose.ObjectId,
-        ref: 'Accont',
+        ref: 'Account',
         required: true
     },
     accountNumber: String,
