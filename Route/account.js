@@ -5,6 +5,7 @@ const {
     getAccount,
     getUserAccount,
     createAccount,
+    virtualAccount,
     updateAccount
 } = require('../Controller/account');
 
@@ -15,6 +16,9 @@ router
     .route('/')
     .get(getAccounts)
     .post(createAccount);
+router
+    .route('/virtual')
+    .post(virtualAccount);
 router
     .route('/:id')
     .get(getAccount)
