@@ -5,6 +5,7 @@ const mongoose      = require('mongoose');
 const cors          = require('cors');
 const morgan        = require('morgan');
 const cookieParser = require('cookie-parser');
+const errorHandler = require('./Middleware/error');
 
 // Load ENV vars
 dotenv.config({ path: './.env'});
@@ -43,7 +44,7 @@ app.use('/auth', auth);
 app.use('/users', users);
 app.use('/identity', identity);
 app.use('/account', account);
-
+app.use(errorHandler);
 // Launch app to listen to specified port
 app.listen(port, function () {
     console.log(`Running SafeBank in ${process.env.NODE_ENV} mode on port ` + port);
